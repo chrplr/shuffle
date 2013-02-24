@@ -65,7 +65,7 @@ $Bot1->Label(-text=>'Iterations=')->pack(-side=>'right');
 
 $seed = $Bot1->Entry(-width => 6)->pack(-side => 'right');
 
-$Bot1->Label(-text =>'Seed=')->pack(side => 'right');
+$Bot1->Label(-text =>'Seed=')->pack(-side => 'right');
 
 $constr = $Bot1->Entry()->pack(-side => 'right');
 

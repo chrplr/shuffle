@@ -24,28 +24,34 @@
 
 use Getopt::Std;
 
+use strict;
+
 $[ = 1;			# set array base to 1
 $, = ' ';		# set output field separator
 $\ = "\n";		# set output record separator
 
-$ExitValue = 0;
+my $ExitValue = 0;
 
 #####################################
 # process command line options
 
+my %opts;
+
 getopts("h?ls:c:n:i:e",\%opts);
 
 if ($opts{'h'} || $opts{'?'})  {
-    &usage();
+    usage();
     $ExitValue = 1; 
     last line;
 }
 
 if ($opts{'l'}) {
-    &license();
+    license();
     $ExitValue = 1; 
     last line;
 }
+
+
 
 # set randomizer's seed 
 if ($opts{'s'}) {
@@ -56,44 +62,50 @@ if ($opts{'s'}) {
 # reads the input lines and store them in 'table'
 # eliminating empty lines
 
+my @table=();
+
 while (<>) {
   chop;
-  $table[++$nlines] = $_ unless ($_ eq ""); 
+  push(@table, $_) unless ($_ eq ""); 
 }
 
-if (!$opts{'n'}) { $n=$nlines; }
-else { $n=$opts{'n'}; }
+my $nlines=$#table;
+my $n=$nlines;
 
-if (!$opts{'i'}) { $iter=$nlines; }
-else { $iter=$opts{'i'}; }
+if ($opts{'n'}) { $n=$opts{'n'}; }
+
+my $iter=$nlines;
+if ($opts{'i'}) { $iter=$opts{'i'}; }
 
 if (!$opts{'c'}) { 
-    &permute(*table,$n); # generate an unconstrained, random, permutation 
-    for ($i=$#table-$n+1;$i<=$#table;$i++)
+    
+    permute(\@table,$n); # generate an unconstrained, random, permutation 
+
+    for (my $i=$nlines-$n+1;$i<=$nlines;$i++)
     { 
-	print $table[i];
+	print $table[$i];
     }
 }
 else
 {
-    $constr=$opts{'c'};
+    my $constr=$opts{'c'};
 
     if ($opts{'e'})
     { # generate random permutations until one fullfills the constraints
       # or the maximum number of iterations is reached.
-	$loop=1; 
-	do { &permute(*table,$#table); } 
-	until (&filter(*table,$constr,$n) or ($loop++>$iter));
+	my $loop=1; 
+	do { permute(\@table,$#table); } 
+	until (filter(\@table,$constr,$n) or ($loop++>$iter));
 	if ($loop>$iter) { $ExitValue=1; }
     }
     else 
     { # build a permutation that fullfills the constraints
-	&shuffle(*table,$constr,$n,$iter) || ($ExitValue=1);
+	shuffle(\@table,$constr,$n,$iter) || ($ExitValue=1);
     }
 
 
     if ($ExitValue==0) {
-	for ($i = 1; $i <= $n; $i++) 
+       for (my $i = 1; $i <= $n; $i++) 
        {
 	print $table[$i];
        }
@@ -105,23 +117,34 @@ exit $ExitValue;
 
 ########################## subroutine shuffle ###############
 sub shuffle {
-  local(*table,$constr,$n,$iter)=@_;
+    my $table = shift;
+    my $constr= shift;
+    my $n = shift;
+    my $iter = shift;
+
 # return 0 if no solution, 1 else. 
 #  print @table;
 
   if ($constr eq "") {
-      &permute(*table,$n);
+      permute(\@table,$n);
       return 1;
   }
 
-@constraint = split(' ', $constr);
+my @constraint = split(' ', $constr);
 
-$loop = 0;
-$MaxLoops = $iter ? $iter : $nlines;
-$output_nlines = $n ? $n : $nlines;
+my $loop = 0;
+my $MaxLoops = $iter ? $iter : $nlines;
+my $output_nlines = $n ? $n : $nlines;
+
+my @rep;
+my @prev;
+my @current;
+my @tmp;
+my ($nf,$pass_line,$fail,$bad_permut);
+my ($i,$j,$k,$back,$ll);
 
 do {
-    &permute(*table, $#table);
+    permute(\@table, $#table);
     $bad_permut = 0;    # will be set to 1 if the permutation is bad...
     $loop++;
 
@@ -129,6 +152,7 @@ do {
     # swapping lines to try and respect the constraints
 
     $nf = (@prev = split(' ', $table[1]));
+
     for ($k = 1; $k <= $nf; $k++) {
 	$rep[$k] = 1;	# rep[k]=number of repetitions in column [k]
     }
@@ -166,7 +190,7 @@ do {
 	if ($pass_line) {
 	    $j--;
 	    if ($j > $i) { 
-		&swap(*table, $i, $j);
+		swap(\@table, $i, $j);
 	    }
 	    for ($k = 1; $k <= $nf; $k++) {
 		if ($prev[$k] eq $current[$k]) {       
@@ -193,21 +217,25 @@ else { 1 }
 }
 
 sub swap {
-    local(*table,$i,$j)= @_;
-# exchanges the ith and jht element from table
-    if ($i != $j) {	
-	$temp = $table[$i];
-	$table[$i] = $table[$j];
-	$table[$j] = $temp;
-    }
+    my $array = shift;
+    my $i = shift;
+    my $j = shift;
+    @$array[$i,$j]=@$array[$j,$i];
 }
 
+
 sub permute {
-    local(*array, $size) = @_;
 # random permutation of array's elements
 # only the "size" last elements are randomized
+
+    my $array = shift;
+    my $size = shift;
+    my $i;
+    my $j;
+
     for ($i = $size; $i > 1; $i--) {
-	&swap(*array, $i, 1 + int(rand(1) * $i));
+	$j = 1 + int(rand(1) * $i);
+	@$array[$i,$j] = @$array[$j,$i];
     }
 }
 
@@ -215,18 +243,29 @@ sub permute {
 sub filter  {
 # this routine just checks if a permutation respects the constraints
 # returning 1 if pass or 0 if failure
-  local(*table,$constr,$nlines)=@_;
+  my $table = shift;
+  my $constr = shift;
+  my $nlines = shift;
 
-  @constraint = split(' ', $constr);
 
-    $nf = (@prev = split(' ', $table[1]));
-    for ($k = 1; $k <= $nf; $k++) {
+  my @constraint = split(' ', $constr);
+
+  my @prev;
+  my  $nf = (@prev = split(' ', $table[1]));
+
+  my @current;
+  my @tmp;
+  my @rep;
+  my $back;
+
+    for (my $k = 1; $k <= $nf; $k++) {
 	$rep[$k] = 1;	# rep[k]=number of repetitions in column [k]
     }
-    for ($i = 2; $i <= $nlines; $i++) {	
+
+    for (my $i = 2; $i <= $nlines; $i++) {	
 	    $nf = (@current = split(' ', $table[$i]));
-	    $fail = 0;
-	    for ($k = 1; (!$fail) and ($k <= $nf); $k++) {	
+	    my $fail = 0;
+	    for (my $k = 1; (!$fail) and ($k <= $nf); $k++) {	
 
 		if ($constraint[$k]>0) { 
 		    if (($prev[$k] eq $current[$k]) and 
@@ -239,7 +278,7 @@ sub filter  {
 		if ($constraint[$k]<0) { 
 		    $back=$i-(-$constraint[$k]);
 		    if ($back<1) { $back=1; }; 
-		    for ($ll = $back; ($ll < $i) and (!$fail);$ll++) {
+		    for (my $ll = $back; ($ll < $i) and (!$fail);$ll++) {
 			@tmp=split(' ',$table[$ll]);
 			if ($tmp[$k] eq $current[$k]) {
 			    $fail=1; 
@@ -250,7 +289,7 @@ sub filter  {
 
 	    } # next k
 
-	    for ($k = 1; $k <= $nf; $k++) {
+	    for (my $k = 1; $k <= $nf; $k++) {
 		if ($prev[$k] eq $current[$k]) {       
 		    $rep[$k]++;
 		}
@@ -269,7 +308,7 @@ return 1;
 
 
 sub usage {
-    $usage_str = '' .
+    my $usage_str = '' .
       "Shuffle performs a random permutation on the lines from the standard input,\n"
       . "optionnaly enforcing constraints.\n" .
       "Usage:\n   shuffle [-e] [-c\"n1 n2...\"] [-n<num>] [-s<num>] [-i<num>]\n".
@@ -294,7 +333,7 @@ sub usage {
 }
 
 sub license {
-    $lic =
+    my $lic =
       " Shuffle - performs a random permutation on the lines from the standard input,\n"
       . " with possible restrictions.\n" .
       " Copyright (C) 1999 Christophe Pallier (pallier\@lscp.ehess.fr)\n\n" .
