@@ -1,0 +1,381 @@
+\documentclass[doc]{apa}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{moreverb}
+
+%%% make verbatim output smaller
+\makeatletter
+\def\verbatim@font{\small\ttfamily}
+\makeatother
+\renewcommand{\tt}{\small\ttfamily}
+
+%\usepackage{hyperref}
+\newcommand{\href}[2]{#2}
+
+\newcommand{\shuffle}{\texttt{shuffle}}
+
+\begin{document}
+
+
+\title{Shuffle: a program to randomize lists with optional sequential
+  constraints}
+
+\acknowledgements{E-mail: \url{pallier@lscp.ehess.fr}. Web: \url{http://www.ehess.fr/centres/lscp/persons/pallier/}}
+
+
+\rightheader{shuffling lists with constraints}
+
+\shorttitle{shuffling lists with constraints}
+
+\author{Christophe Pallier}
+
+\affiliation{LSCP, EHESS-CNRS, 54 bd Raspail, 75006 Paris, France}
+
+\abstract{This paper describes \shuffle, a program that allows to
+  extract random samples from lists of items and to perform
+  pseudo-random permutations on them. It is useful, for example, to
+  extract a sample of words from a dictionary, or to randomize the
+  order of items in an experimental list. In the last case, one can
+  sets restrictions on successive items in order to avoid too many
+  repetitions of the same level of specific experimental factors.
+  \shuffle{} is written in perl which make it accessible to unix,
+  windows and macintosh users.  }
+
+\maketitle
+
+\section*{Introduction}
+
+Experimental psychologists routinely need to create randomized lists.
+For example, the selection of materials for psycholinguistics
+experiments typically requires extracting random samples of words from
+dictionaries. Or, it is often a good idea to present trials in
+different random orders to the participants in an experiment.  The aim
+of using different orders is to diminish the impact of potential
+list-specific effect due to between-trials interactions. Indeed, it
+sometimes happens that a series of trials contains long sequences of
+trials with similar characteristics (For example, successive trials
+may contain stimuli that have similar features, or that map
+systematically onto the same response). It is known that response
+times of participants are quite sensitive to such local repetitions
+\cite{Luce86}.
+
+This paper presents \verb|shuffle|, a program designed to extract
+random samples and to `quasi-randomize' the order of items in lists,
+avoiding long successions of similar items.
+
+
+\section*{Using `shuffle'}
+
+Suppose you have a text file containing a list of words, one per line.
+This could be the Eglish dictionnary used by spell-checkers (e.g.
+/usr/lib/words in linux). Extracting a random sample of 'n' items is
+as simple as typing
+
+\begin{verbatim}
+shuffle n=100 words.txt 
+\end{verbatim}  
+
+This will yield 100 lines, picked at random from the file (words.txt).
+To save this lines in a file 'mysample.txt', you should use the redirecction type 
+
+
+
+\begin{verbatim}
+### sample1.txt
+a 1 
+b 2
+...
+\end{verbatim}. 
+ 
+Then, the command:
+
+
+will print the 100 lines from \verb|sample1.txt| in a random order. In
+order to save this result in a text file, one must use the redirection
+operator `\verb|>|': the command `\verb|shuffle sample1.txt >list1.txt|' produces a random permutation of the lines of
+\verb|sample1.txt| and stores it in the file \verb|list1.txt|.
+
+Often, one does not want a complete permutation, but rather only a
+random sample from the original list. The variable 'n', passed as
+argument to \shuffle{}, permits to specify the maximum number of
+output lines. Thus, \verb|shuffle n=10 sample1.txt| yields 10 lines picked at random from \verb|sample1.txt|.
+
+One can achieve more impressive results by combining shuffle with gawk
+(the language in which shuffle is written, and which is distributed
+along with it):
+
+\begin{verbatim}
+gawk 'length($1)==6 && $2>100' sample1.txt | shuffle n=10
+\end{verbatim}
+
+This command extracts, from \verb|sample1.txt|, 10 words at random,
+that are 6 letters long and that have a lexical frequency superior
+than 100. Learning the syntax of awk would allow the user to epxress
+more complex criteria, such as:
+
+\begin{verbatim}
+gawk '$1~/^[ptkbdg][lr]/' sample1.txt | shuffle n=10
+\end{verbatim}
+
+This last example extracts from sample1.txt, 10 words which start with a
+cluster of consonants.
+
+\subsection*{Applying a permutation to several lists}
+
+\shuffle{} applies a random permutation to a given list. Yet, it is
+sometimes necessary to apply the same random permutation to several
+lists. The variable 'seed', which can optionaly be set on the command
+line, allows to specify a parameter that feeds the number generator.
+Thus `\verb|shuffle seed=1 list1.txt|' and \verb|shuffle seed=1 list2.txt|' will apply the same random permutation to list1.txt and
+list2.txt.
+
+\subsection*{Constraints}
+
+
+\section*{Algorithm for unconstraints permutations}
+
+Here is the pseudo-code for the generation of an unconstrained
+random permutation:
+
+\begin{verbatim}
+...read line[1] to line[N]
+for i := N downto 2 do swap( line[i], line[random(i)] )
+//  remark: 1 <= random(i) <= i
+\end{verbatim}
+
+We are going to use the recurrence principle to demonstrate that this
+algorithm makes all permutations of the lines equiprobable (that is,
+each has the probability $1/n!$). It helps to note that the
+previous code is the iterative equivalent of the following recursive
+algorithm:
+
+\begin{verbatim}
+function perm(n) {
+ swap(line[n],line[random(n)])
+ if n>1 then perm(n-1) }
+\end{verbatim}
+
+For a permutation of size 2: line[2] is swapped with either line[1] or
+line[2], each case having probability 1/2. Therefore the two
+permutations, (1,2) and (2,1), are equiprobable.
+ 
+Let us suppose that the algorithm generates equiprobable permutations
+up until rank $n-1$ (that is, any given line has probability $1/n-1$
+to occur in any given output rank). To generate a permutation of rank
+$n$, the algorithm first swaps line(n) randomly with one of the lines
+between 1 and $n$ (therefore each has the same probability, $1/n$, to
+occur in output rank $n$), and then applies itself recursively to the
+$n-1$ first elements. By hypothesis, all n-1 elements have equal
+probability to be assigned any given output rank between 1 and n-1.
+Finally, a given line (with rank between 1 and $n$) has probability
+1/n to be assigned to ouput rank $n$ and probability $(n-1)/n \times
+1/(n-1)=1/n$ to be assigned to any given output rank between 1 and
+$n-1$.
+
+
+\section*{Algorithm for constrained permutations}
+ 
+A constrained permutation is generated very much in the way a human
+would do it by hand. First an unconstrained permutation of the input
+lines is generated; then the algorithm checks, from the first line
+downward, if all constraints are fulfilled. Every time a line is found
+that violates a constraint, the algorithm searches systematically for
+an acceptable line further down the list. If such a line is found,
+the algorithm swaps it with the line that violated the constraint. If
+no acceptable line can be found, the current permutation is abandoned
+and a new one is tried. 
+
+This algorithm is not guaranteed to converge: the constrains may be to
+strong, that is, impossible to fullfill. For example, suppose that the
+input list is composed of $2/3$ of items of type 1, and $1/3$ of items
+of type 2; if you require that successive lines always be of different
+types, then the algorithm will fail. Yet, if half of the items in the
+input are of type 1 and half of type 2, then the algorithm will always
+find one of the two solutions (permuations that alternate between
+types 1 and 2.)
+
+
+\section*{Requirements, Availability and Use}
+
+The version of \shuffle{} that I distribute is a command-line utility,
+embodying the unix philosophy of designing small, portable and
+efficient tools that can easily be used as building blocks in more
+complex programs. I use it under GNU/linux, but it can be also be used
+under DOS, and as it is written in awk, a language ported to many
+platforms.
+
+\shuffle{} is written in the awk programming language, an interpreter
+of which, gawk, is freely available for many different computer
+systems, including all versions of unix, linux and DOS. \shuffle{} is
+available in two distributions: one for linux/unix, which include only
+the script and the manual pages, and the other for DOS, which includes
+the interpreter gawk.exe.
+
+
+'shuffle' is written in the Awk programming language, a standard Unix
+tool \cite{Aho88,SedAwk,Robbins97}. We recommend the use of 'gawk',
+the GNU version of the Awk, under which we developed and tested
+shuffle. gawk is available for free, and for many platforms, including
+GNU/Linux \href{http://www.gnu.org}{www.gnu.org} and MS DOS
+(\href{ftp://ftp.simtel.net/pub/simtelnet/gnu/djgpp/v2gnu/gwk303b.zip}{ftp://ftp.simtel.net/pub/simtelnet/gnu/djgpp/v2gnu/gwk303b.zip}).
+A nice feature of gawk is that there is no hard coded limit on the
+number of input lines nor on the size of lines of the input file (the
+only limit is the virtual memory of your computer: we routinely use
+'shuffle' to extract random sample from a 8 Mb dictionary).
+
+Shuffle is distributed under the terms of the GNU General Public
+License 2 \cite{GPL}. It can be freely downloaded from the software
+page on the author's web
+site\footnote{\href{http://www.ehess.fr/centres/lscp/persons/pallier}{http://www.ehess.fr/centres/lscp/persons/pallier}.
+  This page is declared in altavista: if for any reason the page has
+  moved, a web search on altavista with the keywords 'Christophe
+  Pallier shuffle' should yield the new location.}.  The installation
+is pretty straightforward as Awk is an interpreted language: shuffle's
+source code is contained in a single, human-readable file, which is
+interpreted by gawk.  The package also contains a two-pages manual in
+text, postscript and troff formats (the latest is for Unix' \verb|man|
+command). Unix users just need to copy 'shuffle' in a directory of the
+path to further have access to the 'shuffle' command.
+
+To MS-DOS users, the instructions recommend to copy the files
+\verb|gawk.exe| and \verb|shuffle| in a directory, say, \verb|c:\awk|,
+and to define shuffle as a macro, by adding to the file
+\verb|c:\autoexec.bat| the following line:
+
+\begin{verbatim}
+doskey shuffle=c:\awk\gawk.exe -f c:\awk\shuffle $* 
+\end{verbatim}
+ 
+After rebooting, the command 'shuffle' is available at the DOS prompt.
+This is a better solution than calling 'gawk -f shuffle' in a batch,
+because DOS batches fail with redirections.
+
+Listing~1 shows a few examples of the use of 'shuffle'. Note that in
+these examples, 'shuffle' just displays its result. To save it in a
+file, one has to use the redirection operator '\verb|>|': Supposing
+that you want to shuffle the file '\verb|mylist.txt|' and put the
+result in, say, '\verb|newlist.txt|', you would type 
+`\verb|shuffle mylist.txt >newlist.txt|'.
+
+\begin{figure}[tb]
+\caption{Listing~1: a few examples of shuffle's use}
+\hrule\vspace*{4pt}
+\begin{verbatim}
+shuffle -?               # to display a short help
+shuffle sample.txt
+shuffle n=10 sample.txt  # limits output to 10 lines
+shuffle n=10 sample.txt  # new permutation of 10 lines
+shuffle n=5 seed=134 sample.txt # sets the seed of the random generator
+shuffle n=5 seed=134 sample.txt # you get the same permutation as before...
+shuffle n=8 constr='2' sample.txt # no more than 2 succesive lines with
+                                  # the same value in column 1
+shuffle n=8 constr='0 3' sample.txt # no more than 3 succesive lines with
+                                    # the same value in column 2
+shuffle n=8 constr='2 2' sample.txt # no more than 2 succesive lines with
+                                   # the same values in column 1 or column 2
+shuffle n=8 constr='1 1' sample.txt # not much room for randomness
+\end{verbatim}
+\hrule
+\end{figure}
+
+
+\section*{The choice of Awk}
+
+We would like to justify our choice of Awk to implement shuffle. It
+would not be difficult to write a graphical version of 'shuffle' in
+Visual Basic (which would allow to run it from within Word) or in Java
+(which would allow it to be run on a web page). This would make it
+even simpler to use for some users (but would prevent the use of
+shuffle in batch scripts).  However, in our experience the Awk
+language is perhaps the most useful and efficient language for the
+tasks routinely performed by psychologists, from searching
+dictionaries or small databases, constructing lists of stimuli, or
+analyzing data.\footnote{See also \cite{Loui96}: `` Most people are
+  surprised when I tell them what language we use in our undergraduate
+  AI programming class.  That's understandable.  We use GAWK.  [...]
+  Their surprise turns to puzzlement when I confide that (a) while the
+  students are allowed to use any language they want; (b) with a
+  single exception, the best work consistently results from those
+  working in GAWK.''}
+
+Awk provides powerful constructions for manipulating a wide variety of
+data in reasonably efficient ways, especially thanks to its regular
+expressions and its associative arrays. It is has a simple syntax, is
+interpreted, and has a relatively short learning curve (people with
+rudiments of programming can learn in it matter of a few hours).  Many
+tasks that our students spent hours trying to do with spreadsheets or
+database programs, such as Excel and Access, can typically be
+performed much more quickly with Awk. Awk has no graphics capabilities
+by itself, but with the conjoint use of gnuplot, another free,
+multi-platform, program\footnote{Gnuplot can be downloaded at
+  \url{http://www.cs.dartmouth.edu/gnuplot_info.html}}, it can replace
+spreadsheet program such as Excel for exploratory data analysis. One
+big advantage of Awk is that one can check how a student has produced
+some results by inspecting the Awk scripts she/he had to write. In the
+70s and 80s, psychology students used to learn and use BASIC to
+perform many small tasks. We contend that Awk could advantageously
+replace BASIC today, and that it can be a valuable tool in the
+psychologist's toolbox \footnote{Over the last 8 years, we have
+  managed to convert almost all our colleagues to using Awk.}
+
+We will illustrate this on two simple examples. While 'shuffle' enforces
+local constraints, one also often want to make sure that items in
+different conditions have similar distributions in experimental lists.
+The Awk script shown in listing~2 prints the means and the standard
+deviations of the ranks of the items in the different conditions (the
+condition is supposed here to be given, in the list of items, as a
+label in the fist column). Note that one may write a script calling
+repeatedly shuffle and the script in listing~2 until the mean ranks of
+the different conditions do not differ more than by a prespecified
+number.
+
+\begin{figure}[htb]
+\caption{Listing~2: awk script to compute the mean and standard dev. 
+of the ranks of different conditions}
+\hrule\vspace*{4pt}
+\begin{verbatim}
+{ line++
+  n[$1]++  
+  sumranks[$1] += line
+  ssranks[$1] += line*line
+}
+END{ 
+ print "condition mean_rank stdev_rank";
+ for (i in n)  
+  printf "%8s %8.1f %8.1f\n",i,sumranks[i]/n[i], \
+         sqrt(ssranks[i]/n[i]-(sumranks[i]*sumranks[i])/(n[i]*n[i])) 
+}
+\end{verbatim}
+\hrule
+\end{figure}
+
+The second example shows how to compute the token frequency of words
+in a text file. This code, given in listing~3, illustrates the power
+of associative arrays (arrays with strings of characters, rather than
+just numbers, as index).
+
+\begin{figure}[htb]
+\caption{Listing~3: awk script to compute the token frequency of all words in a text file (ignoring punctuation)}
+\hrule\vspace*{4pt}
+\begin{verbatim}
+BEGIN { RS="[\n\t '{}\(),.:;\"]+" } # word separators 
+{ count[$0]++ }
+END{ for (token in count) print token,count[token]; } 
+\end{verbatim}
+\hrule
+\end{figure}
+ 
+
+
+\bibliography{shuffle.bib}
+
+\newpage
+\section*{Appendix: shuffle source code}
+
+\listinginput{1}{../shuffle}
+
+\end{document}
+
+
+
+

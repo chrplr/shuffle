@@ -1,0 +1,30 @@
+Shuffle requires Perl to be installed on your system (cf http://www.cpan.org).
+christophe.pallier@m4x.org. 
+INSTALLATION 
+that I can justify this work in my reports...
+This is shuffle, a program to generate random or pseudorandom
+If you like it and use it on a regular basis, please let me know so
+To install, just copy in a directory which is in the path 
+The graphical, interactive version also requires the Tk module for Perl.
+RUNNING
+distance between successive repetitions.
+shuffle.tk
+Please send any comment on 'shuffle' or its documentation to
+order, possibly with constraints on successive lines.  If no contraint
+constraints can be specified as maximum number of repetitions of
+============
+Christophe Pallier (christophe.pallier@m4x.org)
+permutations.
+On the command-line, type shuffle.perl or shuffle.tk.
+shuffle is distributed under the GNU licence (see shuffle -l)
+You may have to modify the first line of each script to reflect to
+actual location of perl on your system.
+Shuffle reads lines and outputs them (or a subset of them) in a random
+Last update: 07/06/2001
+shuffle.perl
+=======
+labels in one or several columns of the output, or on the minimum
+(e.g. /usr/local/bin).
+is specified, all permutations are equiprobable. Otherwise,
+distruns.perl
+

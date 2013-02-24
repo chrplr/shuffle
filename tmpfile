@@ -1,0 +1,41 @@
+ two occurrences of the same label.
+Optionaly, one can set constraints on the admissible permutations
+"Shuffle" randomly permutates the lines contained in this window.
+ licence (see http://www.gnu.org)
+ - a negative number '-m' indicates that occurences of similar labels
+ (see below) and/or specify the seed used by the random generator. (A
+ frequency range, and no more than 3 successive trials with the same
+ constraint to '-4' in the position of the relevant column will
+ When the text is in tabular format (that is organised in columns
+However, all permutations are not equiprobable.
+ 1. Suppose the text describes the materials for a
+more than 'n' times in a row.
+When constraints are specified, the default algorithm is a constructive one which will about always find a solution.
+ 'distractorxx' where xx is the distractor nnumber. Then, setting the
+A simple filter is applied to check if the permutation fullfills the constraints.This garantees equiprobability but is a very inefficient search in the space of permutationsThis means that the algorithm will often fail to find a solution
+ delimited by white-spaces), constraints can be enforced, column by
+Check out the author web site (www.pallier.org) for additionnal information.
+ first the item, then a label specifing the level a frequency factor
+ and you want successive targets to be separated by at least 3
+ column, either on the maximun number of successive lines with a
+ - a positive number 'n' indicates that labels should not be repeated
+If the 'Equiprob' box is checked, all permutations are equiprobable:
+ 'Yes', 'No'. Putting '0 2 3' in the 'constraints' field, will produce
+Constraints are specified as a series of numbers, one for each column.
+when the constraints are hard to fullfill.
+ - a zero indicates that there are no particular constraints.
+Constraints:
+This program is free software distributed under the terms of the GNU
+ produce the desired result.
+ constant label, or on the minimum number of lines that must separate
+ distractors. One column must contain the label 'target' or
+ a list that has no more than 2 succesive trials with the same
+2. Suppose your material contains 10 targets and 90 distractors, 
+ given number, as seed, yields systematically the same permutation.)
+When no constraint is specified all permutations are equiprobable.
+Reports bugs to christophe.pallier@m4x.fr
+ lexical decision experiment: each line might contain three columns:
+ response.
+shouldbe spearated by at least 'm' lines.
+Examples.
+ ('HF' or 'LF', for high or low frequency), and finally the response

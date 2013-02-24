@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99c (Web2C 7.2)
+The top-level auxiliary file: shuffle.aux
+The style file: apacite.bst
+Reallocated wiz_functions (elt_size=4) to 3000 items from 0.
+Database file #1: shuffle.bib.bib
+You've used 8 entries,
+            2540 wiz_defined-function locations,
+            681 strings with 6179 characters,
+and the built_in function-call counts, 3520 in all, are:
+= -- 261
+> -- 120
+< -- 16
++ -- 73
+- -- 56
+* -- 198
+:= -- 761
+add.period$ -- 37
+call.type$ -- 8
+change.case$ -- 24
+chr.to.int$ -- 0
+cite$ -- 8
+duplicate$ -- 181
+empty$ -- 241
+format.name$ -- 56
+if$ -- 593
+int.to.chr$ -- 0
+int.to.str$ -- 17
+missing$ -- 0
+newline$ -- 52
+num.names$ -- 32
+pop$ -- 150
+preamble$ -- 1
+purify$ -- 16
+quote$ -- 0
+skip$ -- 128
+stack$ -- 0
+substring$ -- 41
+swap$ -- 130
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 160
+warning$ -- 0
+while$ -- 28
+width$ -- 0
+write$ -- 132
