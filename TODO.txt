@@ -1,0 +1,6 @@
+Write an installer
+
+a la autoconf for linux, must install the man page
+(using install -g 0 -o 0 -m 0644 man/shuffle.1 /usr/local/man/man8 ????)
+
+Convert everything to Python ;-)

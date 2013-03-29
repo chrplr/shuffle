@@ -25,6 +25,23 @@ distruns.pl
 You may have to modify the first line of each script to reflect to
 actual location of perl on your system.
 
+
+Windows
+-------
+
+Perl does not come pre-installed with Windows. To work with Perl
+programs on Windows, Perl will need to be manually downloaded and
+installed. ActiveState offers a complete, ready-to-install version of
+Perl for Windows.
+
+http://www.activestate.com/activeperl/
+
+
+Perl scripts should start with the path to Perl on the first line. The
+path to Perl should be the location where you installed Perl on your
+Windows machine.
+
+
 RUNNING
 =======
 
