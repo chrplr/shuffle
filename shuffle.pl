@@ -25,7 +25,7 @@
 use Getopt::Std;
 
 use strict;
-
+no warnings 'deprecated';
 $[ = 1;			# set array base to 1
 $, = ' ';		# set output field separator
 $\ = "\n";		# set output record separator
