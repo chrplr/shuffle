@@ -1,0 +1,153 @@
+#!/usr/bin/awk -f 
+#
+# shuffle 
+#
+# Shuffle performs a random permutation on the lines from the standard input,
+# with possible restrictions.
+#
+# Version 1.0
+# Author: Christophe Pallier (christophe@pallier.org)
+# Date: 13 Mar. 1999
+#
+# This program is copyrighted under the terms of the GNU 
+# license (see the file COPYING and http://www.gnu.org).
+#
+# input variables: constr='c1 c2 ... ' seed=xxx n=yyy iter=uuu
+
+BEGIN {
+  srand();  # set random seed to current time (may be overidden by 'seed'
+  STDERR = "/dev/stderr";
+  if (ARGV[1]=="-?" || ARGV[1]=="-h") { usage(); exit 1; }
+  if (ARGV[1]=="-l") { license(); exit 1; }
+}
+
+# stores input in a table
+{ nlines++; table[nlines]=$0; }
+
+END{
+  split(constr,constraint);
+  if (seed) srand(seed);
+
+# here starts the real work...
+
+  loop = 0;
+  MaxLoops=iter?iter:nlines;
+  output_nlines=n?n:nlines;
+
+  do {
+
+    permute(table,nlines);
+    bad_permut = 0;  # the permutation is not yet bad...
+    loop++;
+
+# try to respect constraints, swapping lines when necessary
+
+    nf=split(table[1],prev);
+    for (k=1;k<=nf;k++) rep[k]=1; # rep[k]=number of repetitions in column [k]
+
+    for (i=2;(!bad_permut)&&(i<=output_nlines);i++) {
+      if (DEBUG) {
+	printf ("Search line %d:",i);
+	for (o=1;o<=nlines;o++) printf "%s ",table[o];
+      }
+      pass_line=0;
+      for (j=i;(!pass_line)&&(j<=nlines);j++) {
+	if (DEBUG) printf (" l%d ",j);
+	nf=split(table[j],current);
+	fail=0;
+	for (k=1;(!fail)&&(k<=nf);k++) {
+	  if ((constraint[k]) && (prev[k]==current[k]) && (rep[k]+1>constraint[k])) {
+# constraint[k] is violated
+	    fail=1; 
+	    if (DEBUG) printf "@"> STDERR;
+	  } 
+	} # next k
+	if (fail==0) pass_line=1; # bingo !  
+      } # next j
+# now, if pass_line==1, line j fulfills the constraints
+      if (pass_line) {
+	j--;
+	if (DEBUG) { printf "accept line %d\n",j; } 
+	if (j>i) swap(table,i,j);
+	for (k=1;k<=nf;k++) { 
+	  if (prev[k]==current[k]) rep[k]++; else rep[k]=1;
+	  prev[k]=current[k];
+	}
+      }
+      else {
+# it is not possible to rearrange this permutation;
+# let's try another one.
+	bad_permut = 1; 
+	if (DEBUG) printf "#\n" > STDERR;
+      }
+    } # next i
+
+  } while ( (bad_permut) && (loop<MaxLoops))  
+
+
+    if (bad_permut) print "shuffle: could not find a permutation after" loop "iterations" > STDERR;
+    else {
+      if (DEBUG) printf "Converged in %d loops\n",loop > STDERR;
+      for (i=1;i<=output_nlines;i++) print table[i];
+    }
+}
+
+
+function swap(array,i,j)  # exchange array[i] and array[j]
+{
+  if (i!=j) {
+    temp=array[i]; 
+    array[i]=array[j];
+    array[j]=temp;
+  }
+}
+
+function permute(array,size) # random permutation of array's elements
+{
+  for (i=size;i>1;i--) swap(array,i,1+int(rand()*i));
+}
+
+function usage()
+{
+
+  usage_str = "" \
+  "Shuffle performs a random permutation on the lines from the standard input,\n" \
+  "with possible restrictions.\n" \
+  "Usage:\n   shuffle [constr='n1 n2...'] [n=<num>] [seed=<num>] [iter=<num>]\n" \
+  "Options:\n" \
+  " constr='n1 n2...' : set constraints on maximum number of repetitions in columns 1, 2 ...\n" \
+  " n=<num>     : outputs 'n' lines\n"\
+  " seed=<num>  : sets the seed for the random number generator to number <num>\n"\
+  " -h|? : shows this help\n" \
+  " -l   : displays the license\n\n"\
+  "shuffle reads the lines from the standard input or from a file given\n"\
+  "as argument, and outputs them in a random order, with possible restrictions:\n"\
+  "\nIf constr is not specified on the command line, all permutations are\n"\
+  "equiprobable. Otherwise, constr is a string of numbers separated by\n"\
+  "spaces, where the ith number specifies the maximum\n"\
+  "number of repetitions in ith column of the output. All the\n"\
+  "permutations fullfilling the constraints are equiprobable.\n\n"\
+  "Author: Christophe Pallier (pallier@lscp.ehess.fr).\n"\
+  "Date: 13 March 1999\n" \
+  "This program can be used and distributed under the GNU License (shuffle -l)";
+  print usage_str;
+}
+
+function license() {
+    lic=" Shuffle - performs a random permutation on the lines from the standard input,\n" \
+    " with possible restrictions.\n" \
+    " Copyright (C) 1999 Christophe Pallier (pallier@lscp.ehess.fr)\n\n"\
+    " This program is free software; you can redistribute it and/or\n"\
+    " modify it under the terms of the GNU General Public License\n"\
+    " as published by the Free Software Foundation; either version 2\n"\
+    " of the License, or (at your option) any later version.\n"\
+    "\n This program is distributed in the hope that it will be useful,\n"\
+    " but WITHOUT ANY WARRANTY; without even the implied warranty of\n"\
+    " MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"\
+    " GNU General Public License for more details.\n"\
+    "\n You should have received a copy of the GNU General Public License along\n"\
+    " with this program; if not, write to the Free Software Foundation, Inc.,\n"\
+    " 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA. (www.gnu.org)";
+    print lic;
+    exit 1;
+}

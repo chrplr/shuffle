@@ -1,0 +1,30 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\BCAY{GPL}{GPL}{1991}]{GPL}
+GPL.
+\newblock{}\BBOP{}1991\BBCP{}.
+\newblock{}\Bem{Gnu general public license.}
+\newblock{}(Version 2. Published by the Free Software Fondation,
+  \url{http://www.fsf.org})
+
+\bibitem[\protect\BCAY{Luce}{Luce}{1986}]{Luce86}
+Luce, R.~D.
+\newblock{}\BBOP{}1986\BBCP{}.
+\newblock{}\Bem{Response times: Their role in inferring elementary mental
+  organization.}
+\newblock{}New York: Oxford University Press.
+
+\bibitem[\protect\BCAY{Schwartz \BBA{} Phoenix}{Schwartz \BBA{}
+  Phoenix}{2001}]{randal01}
+Schwartz, R.~L.\BCBT{} \BBA{} Phoenix, T.
+\newblock{}\BBOP{}2001\BBCP{}.
+\newblock{}\Bem{Learning perl.}
+\newblock{}O'Reilly.
+
+\bibitem[\protect\BCAY{Walsh}{Walsh}{1999}]{walsh99}
+Walsh, N.
+\newblock{}\BBOP{}1999\BBCP{}.
+\newblock{}\Bem{Learning {Perl/Tk}.}
+\newblock{}O'Reilly.
+
+\end{thebibliography}

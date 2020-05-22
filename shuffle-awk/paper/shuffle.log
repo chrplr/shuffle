@@ -1,0 +1,219 @@
+This is pdfTeX, Version 3.14159-13d (Web2C 7.3.1) (format=pdflatex 1999.11.13)  5 MAY 2002 17:53
+**shuffle
+(shuffle.tex[/var/lib/texmf/pdftex/config/pdftex.cfg]
+LaTeX2e <1998/12/01> patch level 1
+Babel <v3.6x> and hyphenation patterns for american, french, german, ngerman, n
+ohyphenation, loaded.
+(/home/pallier/texmf/latex/apa/apa.cls
+Document Class: apa 1998/09/02 American Psychological Association format
+(/usr/share/texmf/tex/latex/base/article.cls
+Document Class: article 1999/01/07 v1.4a Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size11.clo
+File: size11.clo 1999/01/07 v1.4a Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/home/pallier/texmf/latex/apa/otherpkg/apacite.sty
+Package: apacite 1994/11/30 APA citation
+\c@BibCnt=\count87
+\bibleftmargin=\skip43
+)
+\b@level@one@skip=\skip44
+\e@level@one@skip=\skip45
+\b@level@two@skip=\skip46
+\e@level@two@skip=\skip47
+\b@level@three@skip=\skip48
+\e@level@three@skip=\skip49
+\b@level@four@skip=\skip50
+\e@level@four@skip=\skip51
+\b@level@five@skip=\skip52
+\e@level@five@skip=\skip53
+\c@APAenum=\count88
+\@text@par@indent=\skip54
+\gr@box=\box26
+\gr@boxwidth=\skip55
+\gr@boxheight=\skip56
+)
+(/usr/share/texmf/tex/latex/misc/url.sty
+Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
+ names
+)
+(/usr/share/texmf/tex/latex/tools/verbatim.sty
+Package: verbatim 1997/04/30 v1.5k LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks14
+\verbatim@line=\toks15
+\verbatim@in@stream=\read1
+)
+(/usr/share/texmf/tex/latex/misc/moreverb.sty
+Package: moreverb 1997/12/07 v2.2d.2 `more' verbatim facilities
+\verbatim@out=\write3
+\tab@position=\count89
+\tab@size=\count90
+\listing@line=\count91
+)
+(/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 1999/02/16 v1.0l Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/config/graphics.cfg)
+Package graphics Info: Driver file: pdftex.def on input line 80.
+
+(/usr/share/texmf/tex/latex/graphics/pdftex.def
+File: pdftex.def 1999/01/26 v0.02l graphics/color for pdftex
+\Gread@gobject=\count92
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+) (shuffle.aux)
+\openout1 = `shuffle.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 46.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 46.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 46.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 46.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 46.
+
+
+LaTeX Warning: Citation `Luce86' on page 1 undefined on input line 63.
+
+
+LaTeX Warning: Citation `randal01' on page 1 undefined on input line 77.
+
+
+LaTeX Warning: Citation `walsh99' on page 1 undefined on input line 82.
+
+[1
+
+[/var/lib/texmf/dvips/config/pdftex.map]]
+
+LaTeX Warning: Citation `GPL' on page 2 undefined on input line 88.
+
+<shufftk.png 599.23874pt, 263.98624pt, obj 13>
+File: shufftk.png Graphic file (type png)
+ <use shufftk.png> [2 <./shufftk.png>] [3] [4] (shuffle.bbl
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 8.
+) [5] [6]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8]
+Overfull \hbox (28.37595pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 "Shuffle performs a random permutation on the lines
+ from the standard input,\n"[] 
+ []
+
+
+Overfull \hbox (23.12599pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 "Usage:\n   shuffle [constr='n1 n2...'] [n=<num>] [
+seed=<num>] [iter=<num>]\n"[] 
+ []
+
+
+Overfull \hbox (101.8753pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 " constr='n1 n2...' : set constraints on maximum nu
+mber of repetitions in columns 1, 2 ...\n"[] 
+ []
+
+
+Overfull \hbox (33.6259pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 " seed=<num>  : sets the seed for the random number
+ generator to number <num>\n"[] 
+ []
+
+
+Overfull \hbox (44.12581pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 . "as argument, and outputs them in a random order,
+ with possible restrictions:\n"[] 
+ []
+
+
+Overfull \hbox (12.62608pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 . "\nIf constr is not specified on the command line
+, all permutations are\n"[] 
+ []
+
+
+Overfull \hbox (23.12599pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 'This program can be used and distributed under the
+ GNU License (shuffle -l)';[] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [9]
+Overfull \hbox (44.12581pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 " Shuffle - performs a random permutation on the li
+nes from the standard input,\n"[] 
+ []
+
+
+Overfull \hbox (23.12599pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 "\n You should have received a copy of the GNU Gene
+ral Public License along\n"[] 
+ []
+
+
+Overfull \hbox (23.12599pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 . " with this program; if not, write to the Free So
+ftware Foundation, Inc.,\n"[] 
+ []
+
+
+Overfull \hbox (7.37613pt too wide) in paragraph at lines 294--294
+[][]       \OT1/cmtt/m/n/10 . ' 59 Temple Place, Suite 330, Boston, MA 02111-13
+07, USA. (www.gnu.org)';[] 
+ []
+
+[10] (shuffle.aux) ) 
+Here is how much of TeX's memory you used:
+ 965 strings out of 25631
+ 10485 string characters out of 193575
+ 64428 words of memory out of 384000
+ 3958 multiletter control sequences out of 10000+15000
+ 10395 words of font info for 37 fonts, out of 400000 for 1000
+ 14 hyphenation exceptions out of 1000
+ 27i,8n,21p,180b,369s stack positions out of 300i,100n,500p,50000b,4000s
+<cmsy10.pfb><cmti10.pfb><cmmi10.pfb><cmr6.pfb><cmr8.pfb><cm
+sl10.pfb><cmtt9.pfb><cmr9.pfb><cmtt10.pfb><cmbx10.pfb><cmr10.pfb><cmr12.pfb><cm
+r17.pfb>
+Output written on shuffle.pdf (10 pages, 134449 bytes).

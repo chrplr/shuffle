@@ -1,0 +1,367 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+           "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<meta name="GENERATOR" content="TtH 3.01">
+ <style type="text/css"><!--
+ td div.comp { margin-top: -0.6ex; margin-bottom: -1ex;}
+ td div.comb { margin-top: -0.6ex; margin-bottom: -.6ex;}
+ td div.hrcomp { line-height: 0.9; margin-top: -0.8ex; margin-bottom: -1ex;}
+ td div.norm {line-height:normal;}
+ span.roman {font-family: serif; font-style: normal; font-weight: normal;} 
+ span.overacc2 {position: relative;  left: .8em; top: -1.2ex;}
+ span.overacc1 {position: relative;  left: .6em; top: -1.2ex;} --></style>
+
+ 
+<title> Shuffle: a program to randomize lists with optional sequential
+  constraints</title>
+ 
+<h1 align="center">Shuffle: a program to randomize lists with optional sequential
+  constraints </h1>
+
+<p>
+
+<h3 align="center">Christophe Pallier </h3>
+
+<p>
+
+<h2>Introduction</h2>
+
+<p>
+Experimental psychologists routinely need to create randomized lists.
+A first example is the selection of the material for psycholinguistics
+experiments, which typically requires extracting random samples of
+words from dictionaries. Another example is that of creating
+different randomizations of trials' order for each participant in an
+experiment.
+
+<p>
+Presenting the stimuli in different random orders to each participant aims to
+diminish the impact of list-specific potential between-trials interactions.
+Some between-trials interactions arise when series of trials contains long
+sequences with similar characteristics; For example, successive trials may
+contain stimuli that have similar features, or map systematically onto the
+same response. It is known that response times of participants are sensitive
+to such local repetitions [<a href="#Luce86" name="CITELuce86"> LuceLuce1986</a>].
+
+<p>
+This paper presents <tt>shuffle</tt>, a program designed to extract
+random samples and to `quasi-randomize' the order of items in lists,
+avoiding long runs of similar items.
+
+<p>
+
+<h2>Installing shuffle</h2>
+
+<p>
+The ``shuffle'' package can be freely downloaded from the software page on the
+author's web site<a href="#tthFtNtAAB" name="tthFrefAAB"><sup>1</sup></a>. It consists of two
+programs: <tt>shuffle</tt> and <tt>shuffle.tk</tt>. The first is meant to be
+used from a command line, while the other uses a graphical interface.
+
+<p>
+Both programs are written in Perl. Therefore, before using them, an
+interpreter for the language Perl must be installed on your computer (cf.
+http://www.cpan.org); In addition, the Tk module must be installed if you want
+to use the graphical version.
+
+<p>
+One of the advantages of having shuffle written Perl, is that it can run under
+Linux, MacOSX, Windows... The other is that, if necessary, one can modify the
+source code to tune it to ones' needs. ``shuffle'' is distributed under the
+terms of the GNU General Public License 2 [<a href="#GPL" name="CITEGPL"> GPLGPL1991</a>].
+
+<p>
+Once Perl is working, to install the programs, you need to:
+
+<ol type="1"><p>
+<li> copy <tt>shuffle</tt> and <tt>shuffle.tk</tt> in a directory listed in
+  the PATH variable (e.g.  <tt>&nbsp;/bin</tt> under Linux, <tt>c://windows</tt>
+    under Windows.).</li>
+<p>
+<li> adapt, if necessary, the first line of each program, to reflect to
+  actual location of perl on your system. The original files assume that
+  the perl program is located at <tt>/usr/bin/perl</tt>. You may have to
+  change this to, for example, <tt>/usr/local/bin/perl</tt> (To locate perl,
+  under unix/linux, just type `which perl' on a command line).</li>
+</ol>
+
+<p>
+
+<h2>Using `shuffle'</h2>
+
+<p>
+<tt>shuffle</tt> can either be used as a command-line utility, or as program with a
+graphical interface. New users will probably prefer the version with the
+graphical interface, but the command line version has additional options, no
+limitation on the size of the input and embodies the unix philosophy of
+designing small, portable and efficient tools that can easily be used as
+building blocks in more complex programs.  It will therefore appeal more to
+advanced users.
+
+<p>
+Typing `<tt>shuffle.tk</tt>' on a command line launches the graphical version.
+
+<p>
+
+<center><table border="0"><tr><td></td><td><table border="0"><tr><td><a href="shufftk">Figure</a>
+</td></tr></table><!--vbox-->
+</td><td>
+</td></tr></table><!--hboxt--></center>
+
+<p>
+The center of the window features a text area where the original list can be
+entered, with one item per line. The list can be edited directly, or pasted
+from the clipboard. Alternatively, it can be read from a text file by typing
+first the filename in the box entitled `Filename' and then pressing the `Open'
+button.<a href="#tthFtNtAAC" name="tthFrefAAC"><sup>2</sup></a>
+
+<p>
+Pressing the `shuffle' button shuffles the lines in the text area in a random
+order. The ``seed'' box can be used to enter a number which determine the
+permutation that will be used. This is useful if one want to apply the same
+permutation to several lists. 
+
+<p>
+If the ``constraints'' box is empty, all permutations are equiprobable (the
+formal demonstration is given below). To avoid certain permutations however,
+it is possible to write a series of numbers in this box. This option is
+meaningful only when the input text is in tabular format, that is when each
+line contains the same number of items separated by spaces. The items in some
+or all of the columns may be considered as ``labels'' corresponding to levels
+of experimental factors. It is then possible to reject permutations in which
+the labels are repeated, across successive lines, more than a fixed number of
+times. For example, if one column contains the labels `WORD' or `PSEUDO' to
+indicate the level of the factor `LEXICALITY', one may want to avoid
+permutations in which, say, more than four lines in row contain the same label
+(that is belong to the same level of the factor LEXICALITY).
+
+<p>
+The <i>i<sup><span class="roman">th</span></sup></i> number in the constraint box corresponds to the
+<i>i<sup><span class="roman">th</span></sup></i> column in the input. When set to '0', there is no
+constraints in the relevant column. When set to a positive number, it means the
+maximum number of repetitions (across successive lines) in the relevant
+column. When set to a negative number, e.g. <font face="symbol">-</font
+>n, it means that a least n
+lines must separate two occurrences of the same label.
+
+<p>
+The latter option is useful to create lists where a small of targets appear in
+the middle of a larger number of filler items: on can create a column
+containing either the label `TARGET' or 'FILLERxxx' where `xxx' varies for
+each filler. If the constraint `-10' is associated to this columns, targets
+will be separated by at least 10 fillers.
+
+<p>
+The command line utility will be described briefly, supposing the input list
+is in a text file named `corpus.txt' in the current working directory. The command:
+
+<pre>
+shuffle corpus.txt
+
+</pre>  
+prints the lines from <tt>corpus.txt</tt> in a random order. In
+order to save this result in a text file, one must use the redirection
+operator `<tt>&gt;</tt>': the following command: 
+
+<pre>
+shuffle corpus.txt &#62;neworder.txt
+
+</pre>
+produces a random permutation of the lines of <tt>corpus.txt</tt> and stores it
+in the file <tt>neworder.txt</tt>.
+
+<p>
+Often, one does not need a complete permutation, but rather only a
+random sample from the original list. The variable 'n', passed as
+argument to <tt>shuffle</tt>, permits to specify the maximum number of
+output lines:
+
+<pre>
+shuffle n=10 corpus.txt
+
+</pre>
+yields 10 lines picked at random from <tt>corpus.txt</tt>. The variable
+<tt>seed</tt> can also be set on the command line. This can be useful to apply
+the same permutation to different files:
+
+<pre>
+shuffle seed=123 corpus.txt
+shuffle seed=123 corpus2.txt
+
+</pre>
+
+<p>
+Finally, to specify constraints on the repetition of labels in columns, one
+must pass the variable `constr' on the command line:
+
+<pre>
+shuffle constr='0 0 4 -6' corpus.txt
+
+</pre>
+
+<p>
+Listing&nbsp;1 shows a few examples of the use of 'shuffle'. Note that in
+these examples, 'shuffle' just displays its result. To save it in a
+file, one has to use the redirection operator '<tt>&gt;</tt>'.
+
+<p>
+
+<p>
+<a name="tth_fIg1">
+</a> <center>Figure 1: Listing&nbsp;1: a few examples of shuffle's use</center>
+<hr />
+
+
+<pre>
+shuffle -?               # to display a short help
+shuffle sample.txt
+shuffle n=10 sample.txt  # limits output to 10 lines
+shuffle n=10 sample.txt  # new permutation of 10 lines
+shuffle n=5 seed=134 sample.txt # sets the seed of the random generator
+shuffle n=5 seed=134 sample.txt # you get the same permutation as before...
+shuffle n=8 constr='2' sample.txt # no more than 2 succesive lines with
+                                  # the same value in column 1
+shuffle n=8 constr='0 3' sample.txt # no more than 3 succesive lines with
+                                    # the same value in column 2
+shuffle n=8 constr='2 2' sample.txt # no more than 2 successive lines with
+                                   # the same values in column 1 or column 2
+shuffle n=8 constr='1 1' sample.txt # not much room for randomness
+
+</pre>
+<hr />
+
+
+<p>
+
+<h2>Proof of equiprobability</h2>
+
+<p>
+Here is the pseudo-code for the generation of an unconstrained random
+permutation:
+
+<p>
+
+<pre>
+...read line[1] to line[N]
+for i := N downto 2 do swap( line[i], line[random(i)] )
+//  remark:  random(i) return a number in the interval [1;i]
+
+</pre>
+
+<p>
+We are going to use the recurrence principle to demonstrate that this
+algorithm makes all permutations of the lines equiprobable (that is,
+each has the probability 1/n!). It helps to note that the
+previous code is the iterative equivalent of the following recursive
+algorithm:
+
+<p>
+
+<pre>
+function perm(n) {
+ swap(line[n],line[random(n)])
+ if n&#62;1 then perm(n-1) 
+}
+
+</pre>
+
+<p>
+For a permutation of size 2: line[2] is swapped with either line[1] or
+line[2], each case having probability 1/2. Therefore the two
+permutations, (1,2) and (2,1), are equiprobable.
+
+<p>
+Let us suppose that the algorithm generates equiprobable permutations
+up until rank n<font face="symbol">-</font
+>1 (that is, any given line has probability 1/n<font face="symbol">-</font
+>1
+to occur in any given output rank). To generate a permutation of rank
+n, the algorithm first swaps line(n) randomly with one of the lines
+between 1 and n (therefore each has the same probability, 1/n, to
+occur in output rank n), and then applies itself recursively to the
+n<font face="symbol">-</font
+>1 first elements. By hypothesis, all n-1 elements have equal
+probability to be assigned any given output rank between 1 and n-1.
+Finally, a given line (with rank between 1 and n) has probability
+1/n to be assigned to output rank n and probability (n<font face="symbol">-</font
+>1)/n &times;1/(n<font face="symbol">-</font
+>1)=1/n to be assigned to any given output rank between 1 and
+n<font face="symbol">-</font
+>1.
+
+<p>
+
+<h2>Algorithm for constrained permutations</h2>
+
+<p>
+A constrained permutation is generated very much in the way a human
+would do it by hand. First an unconstrained permutation of the input
+lines is generated; then the algorithm checks, from the first line
+downward, if all constraints are fulfilled. Every time a line is found
+that violates a constraint, the algorithm searches systematically for
+an acceptable line further down the list. If such a line is found,
+the algorithm swaps it with the line that violated the constraint. If
+no acceptable line can be found, the current permutation is abandoned
+and a new one is tried. 
+
+<p>
+This algorithm is not guaranteed to converge: the constrains may be to
+strong, that is, impossible to fullfill. For example, suppose that the
+input list is composed of 2/3 of items of type 1, and 1/3 of items
+of type 2; if you require that successive lines always be of different
+types, then the algorithm will fail. Yet, if half of the items in the
+input are of type 1 and half of type 2, then the algorithm will always
+find one of the two solutions (permutations that alternate between
+types 1 and 2.)
+
+<p>
+
+<h2>Conclusion</h2>
+
+<p>
+I wrote shuffle for my own needs. I distribute it in the hope that it can be
+useful to others. I do not garantee that it works as intended. I would
+appreciate any bug reports, about the programs or the documentation.
+
+<p>
+
+<h2>References</h2>
+
+<dl compact="compact">
+ <dt><a href="#CITEGPL" name="GPL">[ GPLGPL1991]</a></dt><dd>
+GPL.
+1991.
+
+(Version 2. Published by the Free Software Fondation,
+  <a href="http://www.fsf.org"><tt>http://www.fsf.org</tt></a>)
+
+<p>
+</dd>
+ <dt><a href="#CITELuce86" name="Luce86">[ LuceLuce1986]</a></dt><dd>
+Luce, R.&nbsp;D.
+1986.
+
+New York: Oxford University Press.</dd>
+</dl>
+
+<p>
+
+<h2>Appendix: shuffle source code</h2>
+
+<p>
+<hr /><h3>Footnotes:</h3>
+
+<p>
+<a name="tthFtNtAAB"></a><a href="#tthFrefAAB"><sup>1</sup></a>
+<p>
+<a name="tthFtNtAAC"></a><a href="#tthFrefAAC"><sup>2</sup></a>The user should be aware that there is a limitation on the
+  size of the text that can be put in a text area in a graphical interface.
+  This limitation varies from one operating system to the other, so no general
+  limit can be given, but we should be cautious when pasting more than, e.g.
+  32000 characters. If in doubt, use the command-line version.
+<br /><br /><hr /><small>File translated from
+T<sub><font size="-1">E</font></sub>X
+by <a href="http://hutchinson.belmont.ma.us/tth/">
+T<sub><font size="-1">T</font></sub>H</a>,
+version 3.01.<br />On  5 May 2002, 17:25.</small>
+</html>

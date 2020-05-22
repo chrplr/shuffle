@@ -1,5 +1,6 @@
-This is shuffle, a program to generate random or pseudorandom
-permutations.
+# Perl-Shuffle #
+
+This is a Perl implementation of "shuffle", a program to generate random or pseudorandom permutations.
 
 Shuffle reads lines and outputs them (or a subset of them) in a random
 order, possibly with constraints on successive lines.  If no contraint
@@ -9,25 +10,35 @@ labels in one or several columns of the output, or on the minimum
 distance between successive repetitions.
 
 
-INSTALLATION 
-============
+## WARNING: crash with recent versions of Perl ##
+
+With recent versions of Perl (>=5.30), `shuffle.pl` crashes with the following error message:
+
+    Assigning non-zero to $[ is no longer possible at ./shuffle.pl line 29
+
+This means that one can no longer set the arrays to start a a non sero index.
+If anyone wants to tackle this issue...
+
+
+## INSTALLATION ##
+
 
 Shuffle requires Perl to be installed on your system (cf http://www.cpan.org).
 The graphical, interactive version also requires the Tk module for Perl.
 
-To install, just copy in a directory which is in the path 
-(e.g. /usr/local/bin).
+### Ubuntu ###
 
-shuffle.pl
-shuffle_tk.pl
-distruns.pl
+To install Perl and its Tk module under Ubuntu, type:
 
-You may have to modify the first line of each script to reflect to
+    sudo apt install perl perl-tk
+
+To install shuffle, just copy the `*.pl` files in a directory which is in the path (e.g. /usr/local/bin).
+
+Note: You may have to modify the first line of each script to reflect to
 actual location of perl on your system.
 
 
-Windows
--------
+### Windows ###
 
 Perl does not come pre-installed with Windows. To work with Perl
 programs on Windows, Perl will need to be manually downloaded and
@@ -42,10 +53,9 @@ path to Perl should be the location where you installed Perl on your
 Windows machine.
 
 
-RUNNING
-=======
+## RUNNING ##
 
-On the command-line, type shuffle.pl or shuffle_tk
+On the command-line, type `shuffle.pl` or `shuffle_tk.pl`
 
 
 
@@ -64,3 +74,4 @@ Last update: 07/06/2001
 
 
 
+                        
