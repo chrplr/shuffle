@@ -14,4 +14,6 @@ distance between successive repetitions.
 
 There are three implementations, in AWK, Perl and Python.
 
+See [shuffle-awk/README.md](shuffle-awk/README.md) for examples of usage.
+
 Christophe@Pallier.org
