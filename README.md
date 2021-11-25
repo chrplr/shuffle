@@ -14,6 +14,21 @@ distance between successive repetitions.
 
 There are three implementations, in AWK, Perl and Python.
 
-See [shuffle-awk/README.md](shuffle-awk/README.md) for examples of usage.
+Here are some examples of command lines with the [AWK implementation](shuffle-awk/README.md), 
+
+    shuffle -?               # to display a short help
+    shuffle sample.txt
+    shuffle n=10 sample.txt  # limits output to 10 lines
+    shuffle n=10 sample.txt  # new permutation of 10 lines
+    shuffle n=5 seed=134 sample.txt # sets the seed of the random generator
+    shuffle n=5 seed=134 sample.txt # you get the same permutation as before...
+    shuffle n=8 constr='2' sample.txt # no more than 2 succesive lines with
+                                      # the same value in column 1
+    shuffle n=8 constr='0 3' sample.txt # no more than 3 succesive lines with
+                                        # the same value in column 2
+    shuffle n=8 constr='2 2' sample.txt # no more than 2 succesive lines with
+                                        # the same values in column 1 or column 2
+    shuffle n=8 constr='1 1' sample.txt # not repetition of colum 1 and 2 on successive lines
+
 
 Christophe@Pallier.org
