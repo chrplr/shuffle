@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env -S perl -T -w
 #
 # Graphical Interface to shuffle
 # Author: Christophe Pallier

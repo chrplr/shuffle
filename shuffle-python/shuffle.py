@@ -1,74 +1,63 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
-# Time-stamp: <2019-06-07 14:50:07 christophe@pallier.org>
-
+# Time-stamp: <2021-12-09 11:59:09 christophe@pallier.org>
 """
-Shuffles lines from a table with optional constraints on repetitions.
+Shuffles lines with optional constraints on repetitions.
 
-Constraints are expressed as maximum number of repetitions of string
-in given columns, or minimal distance (in rows) between the repetition
-of a string
+Each line is tokenized, and each token can be considered a "label".
+Constraints are expressed as maximum number of repetitions of a label
+in given columns and/or minimal spread (in number of rows) between the repetition
+of a label.
 """
 
 import csv
 import random
 import time
+import argparse
 
 DEBUG = False
 
-##
+
 def get_table_from_csv_file(csvfilename):
-    csvfile = open(csvfilename)
-    dialect = csv.Sniffer().sniff(csvfile.readline(),
-                                  [',', ';', '\t', ' '])
-    assert(dialect is not None)
-    csvfile.seek(0)
-    data = csv.reader(csvfile, dialect)
-    return [row for row in data]  # maybe we should use row.decode.utf('utf-8')
+    """imports a table from a csv file (trying to determine the delimiter).
 
+    Args:
+        csvfilename(str) : name of the file
 
-##
-def shuffle_0(l):
+    Returns:
+        list : list of lists of strings
+
     """
-    returns a new list containing the elements of l shuffled in random order
+    with open(csvfilename, "rt") as f:
+        dialect = csv.Sniffer().sniff(f.readline(), [',', ';', '\t', ' '])
+        assert (dialect is not None)
+        f.seek(0)
+        data = csv.reader(f, dialect)
+        return [row for row in data]
+
+
+def shuffle_0(List):
     """
-    l2 = l[:]
-    random.shuffle(l2)
-    return l2
+    create a new list with the elements of `List` shuffled in a random order.
 
+    Args:
+        List(list) : list
 
-##
-def shuffle_equiprob(table, maxrep=None, mingap=None, time_limit=1):
+    Returns:
+        list: A new list with the elements of `List` in a random order
+
     """
-    table: list of lists of strings (each row is a list of strings)
-    maxrep: maximum number of repetitions of a string in a columns
-    mingap: minimum distances (in rows) between two repetitions of a string
-    in the same column
-    (maxrep and mingat are dictionaries mapping column number
-    to a number expressing the constraint)
-    """
-    start_time = time.time()
-    go_on = True
-    while go_on and (time.time() < (start_time + time_limit)):
-        random.shuffle(table)
-        ok, _ = check_constraints(table, maxrep, mingap)
-        go_on = not(ok)
-    if not(ok):
-        return None
-    else:
-        return table
+    List2 = List.copy()
+    random.shuffle(List2)
+    return List2
 
 
-##
-##
 def check_constraints(table, maxrep=None, mingap=None, irow=0):
     """Checks if a permutation respects constraints.
 
-
     Args:
-        table (list of list of strings): table whose row must be permuted
-        maxrep (dict): maximum number of repetitions of a string
-        mingap (dict): minimum gap between two repetitions of a string
+        table (list of list of strings): table whose rows must be permuted
+        maxrep (dict): maximum numbers of repetitions of a label
+        mingap (dict): minimum spread between two repetitions of a given label
 
     Returns:
         a pair consisting of True or False indicating if the table
@@ -77,7 +66,7 @@ def check_constraints(table, maxrep=None, mingap=None, irow=0):
 
 
     Note: These variables should be dictionaries
-    mapping column number to a number., for example maxrep={3:4, 5:2} means
+    mapping column's number to a number. For example maxrep={3:4, 5:2} means
     that columns 3 and 5 (starting from 0 as per Python convention) should have
     maximum of repetitions of the same label 4 and 2 times respectively)
 
@@ -86,40 +75,47 @@ def check_constraints(table, maxrep=None, mingap=None, irow=0):
 
     if maxrep is not None:
         repetitions = maxrep.copy()
-        for f in list(repetitions.keys()): repetitions[f] = 1
+        for f in list(repetitions.keys()):
+            repetitions[f] = 1
 
     if irow < 0: irow = 0
-    if (DEBUG): print("checking contraints; irow=%d, row=%s" % (irow, table[irow]))
+    if (DEBUG):
+        print("checking contraints; irow=%d, row=%s" % (irow, table[irow]))
 
     previous = table[irow]
     irow += 1
     ok = True
     while ok and irow < len(table):
         row = table[irow]
-        if (DEBUG): print("irow=%d, row=%s, previous=%s" % (irow, row, previous))
+        if (DEBUG):
+            print("irow=%d, row=%s, previous=%s" % (irow, row, previous))
 
         if maxrep is not None:
-        # check maxrep constraints
+            # check maxrep constraints
             for field in list(maxrep.keys()):
                 if previous[field] == row[field]:
                     repetitions[field] += 1
                     ok = repetitions[field] <= maxrep[field]
                 else:
                     repetitions[field] = 1
-                if not(ok):
-                    if (DEBUG): print("Violation of maxrep %d %d" % (field, maxrep[field]))
+                if not (ok):
+                    if (DEBUG):
+                        print("Violation of maxrep %d %d" %
+                              (field, maxrep[field]))
                     break
 
         if mingap is not None:
-        # check mingap constraints
+            # check mingap constraints
             for field in list(mingap.keys()):
                 back = irow - mingap[field]
                 if back < 0: back = 0
                 while ok and (back < irow):
                     ok = ok and (table[back][field] != table[irow][field])
                     back += 1
-                if not(ok):
-                    if (DEBUG): print("Violation of mingap %d:%d" % (field, mingap[field]))
+                if not (ok):
+                    if (DEBUG):
+                        print("Violation of mingap %d:%d" %
+                              (field, mingap[field]))
                     break
 
         previous = row
@@ -130,10 +126,38 @@ def check_constraints(table, maxrep=None, mingap=None, irow=0):
     return (ok, irow)
 
 
+def shuffle_equiprob(table, maxrep=None, mingap=None, time_limit=1):
+    """Shuffle with constraints on repetitions.
+
+    Args:
+       table: list of lists of strings (each row is a list of strings)
+       maxrep: maximum number of repetitions of a string in a columns
+       mingap: minimum distances (in rows) between two repetitions of a string
+    in the same column
+      (maxrep and mingat are dictionaries mapping column number
+     to a number expressing the constraint)
+
+    Returns:
+
+
+    """
+    start_time = time.time()
+    go_on = True
+    while go_on and (time.time() < (start_time + time_limit)):
+        random.shuffle(table)
+        ok, _ = check_constraints(table, maxrep, mingap)
+        go_on = not (ok)
+    if not (ok):
+        return None
+    else:
+        return table
+
+
+
 def shuffle_build(table, maxrep=None, mingap=None, maxtime=1):
     n = len(table)
-    assert(mingap is not None or maxrep is not None)
-    m1 , m2 = 0, 0
+    assert (mingap is not None or maxrep is not None)
+    m1, m2 = 0, 0
     if mingap is not None:
         m1 = max(mingap.values())
     if maxrep is not None:
@@ -145,10 +169,9 @@ def shuffle_build(table, maxrep=None, mingap=None, maxtime=1):
     ok = False
     irow = 0
     nfailure = 0
-    while not(ok) and (time.time() < (start_time + maxtime)):
-        ok, irow = check_constraints(table, maxrep, mingap,
-                                     irow - backtrack)
-        if not(ok):
+    while not (ok) and (time.time() < (start_time + maxtime)):
+        ok, irow = check_constraints(table, maxrep, mingap, irow - backtrack)
+        if not (ok):
             nfailure += 1
             if (irow >= (n - 1)) or (nfailure > (n * 100)):  # start again
                 if (DEBUG): print("Let's start again")
@@ -176,6 +199,7 @@ def test():
     print(shuffle_equiprob(t, mingap={0: 2}))
     print("----------")
     print(shuffle_build(t, maxrep={0: 1}))
+
 
 ##
 if __name__ == '__main__':

@@ -1,16 +1,13 @@
-#! /usr/bin/perl
-#
-# Note: you may have to modify the first line above to reflect the location
-# of `perl' on your system. Under unix, type `which perl' to determine it.
+#! /usr/bin/env perl
 #
 # Shuffle performs a random permutation on the lines from the standard input,
 # with possible constraints on successive lines.
 #
 # Version 1.0 (perl)
-# Author: Christophe Pallier (pallier@lscp.ehess.fr)
+# Author: Christophe Pallier <christophe@pallier.org>
 # Date: 13 Mar. 1999 (awk) 20 July 2000 (perl)
 #
-# cf. www.pallier.org for a paper describing "shuffle" in details.
+# cf. https://github.com/chrplr/shuffle for more information.
 #
 # This program is copyrighted under the terms of the GNU
 # license (see http://www.gnu.org).
@@ -26,7 +23,9 @@ use Getopt::Std;
 
 use strict;
 no warnings 'deprecated';
-$[ = 1;       # set array base to 1
+
+use Array::Base (1);
+
 $, = ' ';     # set output field separator
 $\ = "\n";    # set output record separator
 

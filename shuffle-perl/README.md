@@ -10,14 +10,9 @@ labels in one or several columns of the output, or on the minimum
 distance between successive repetitions.
 
 
-## WARNING: crash with recent versions of Perl ##
 
-With recent versions of Perl (>=5.30), `shuffle.pl` crashes with the following error message:
 
-    Assigning non-zero to $[ is no longer possible at ./shuffle.pl line 29
 
-This means that one can no longer set the arrays to start a a non sero index.
-If anyone wants to tackle this issue...
 
 
 ## INSTALLATION ##
@@ -51,6 +46,27 @@ http://www.activestate.com/activeperl/
 Perl scripts should start with the path to Perl on the first line. The
 path to Perl should be the location where you installed Perl on your
 Windows machine.
+
+## Array::Base module
+
+You also need to install the ``Array::Base`` module, otherwise you will get the following error message when you tryto execute ``shuffle.pl``::
+
+    $ perl shuffle.pl
+    Can't locate Array/Base.pm in @INC (you may need to install the Array::Base module)
+
+To install it under Linux,
+
+    cpan   # to install cpan
+    sudo perl -MCPAN -e 'install Array::Base'
+
+To run the GUI version of the program, ``shuffle_tk.pl``, you may also need to install Tk:
+
+    sudo perl -MCPAN -e 'install Tk'
+
+
+
+General instructions to install perl modules are available at <http://www.cpan.org/modules/INSTALL.html>
+
 
 
 ## RUNNING ##
